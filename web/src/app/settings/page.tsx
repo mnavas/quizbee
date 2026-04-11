@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const LS_BASE_URL_KEY = "qb_base_url";
 
@@ -77,6 +78,15 @@ export default function SettingsPage() {
           <p className="text-sm font-mono bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-amber-700 select-all">
             {baseUrl}/join
           </p>
+        </div>
+
+        {/* Change password */}
+        <div className="border-t border-gray-100 pt-4">
+          <h2 className="text-sm font-semibold text-gray-800 mb-1">Password</h2>
+          <p className="text-xs text-gray-500 mb-3">Update your account password.</p>
+          <Link href="/change-password" className="btn-ghost text-sm">
+            Change password →
+          </Link>
         </div>
 
       </div>
