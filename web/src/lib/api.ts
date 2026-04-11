@@ -11,12 +11,14 @@
 
 import axios from "axios";
 
-// In production, NEXT_PUBLIC_API_URL should be the public URL of the API
-// (e.g. https://quizbee.example.com/api/v1). When not set, fall back to the
-// same origin so that a reverse-proxy setup works without configuration.
+// NEXT_PUBLIC_API_URL can be set explicitly for custom deployments.
+// When not set, derive the API URL from the browser's current hostname on
+// port 8000 — this works for any IP or domain without reconfiguring.
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ??
-  (typeof window !== "undefined" ? `${window.location.origin}/api/v1` : "http://localhost:8000/api/v1");
+  process.env.NEXT_PUBLIC_API_URL ||
+  (typeof window !== "undefined"
+    ? `${window.location.protocol}//${window.location.hostname}:8000/api/v1`
+    : "http://localhost:8000/api/v1");
 
 export const api = axios.create({ baseURL: API_URL });
 

@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     database_url: str
     secret_key: str
     media_root: str = "/data/media"
-    allowed_origins: str = "http://localhost:3000"
+    allowed_origins: str = "*"
     admin_email: str = "admin@quizbee.local"
     admin_password: str = "changeme"
 
