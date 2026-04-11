@@ -237,6 +237,30 @@
     .method-badge.method-script { background: #E0E7FF; color: #3730A3; }
     .method-badge.method-ai    { background: #FEF3C7; color: #92400E; }
 
+    /* ── COPY BLOCK ── */
+    .copy-wrap { position: relative; margin-top: 1.25rem; }
+    .copy-btn {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      background: #30363D; color: #E6EDF3; border: 1px solid #484F58;
+      border-radius: 6px; padding: 0.3rem 0.75rem;
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .copy-btn:hover { background: #484F58; }
+    .copy-btn.copied { background: #1f6feb; border-color: #388bfd; color: #fff; }
+
+    /* ── AGENT INTRO ── */
+    .agent-intro {
+      background: var(--gray-900); border-radius: var(--radius);
+      padding: 2rem; margin-bottom: 2rem; color: #E6EDF3;
+    }
+    .agent-intro h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--amber); }
+    .agent-intro ol { padding-left: 1.25rem; }
+    .agent-intro ol li {
+      font-size: 0.9rem; line-height: 1.7; margin-bottom: 0.4rem; color: #C9D1D9;
+    }
+    .agent-intro ol li strong { color: var(--amber); }
+
     /* ── FOOTER ── */
     footer {
       background: var(--gray-900); padding: 3rem 2rem;
@@ -293,6 +317,7 @@
     <li><a href="#import" class="active">1 · Import JSON</a></li>
     <li><a href="#script">2 · Python script</a></li>
     <li><a href="#ai">3 · AI-assisted</a></li>
+    <li><a href="#agent-context">4 · Agent context</a></li>
   </ul>
 </div>
 
@@ -718,7 +743,255 @@ python seed_audio.py \
 
   </section>
 
+  <hr class="divider" />
+
+  <!-- ══════════════════════════════════════════════
+       EXAMPLE 4 — AGENT CONTEXT
+  ══════════════════════════════════════════════ -->
+  <section class="example-section" id="agent-context">
+    <div class="example-tag">Example 4</div>
+    <div class="method-badge method-ai">📋 Copy &amp; paste</div>
+    <h2>Full agent context — give this to any AI</h2>
+    <p>
+      Copy the block below and paste it as the <strong>first message</strong> to any AI (Claude, ChatGPT, Gemini).
+      It contains everything the AI needs: the complete JSON format, every question type with correct encoding,
+      all the rules, and ready-to-use examples. Then just describe the test you want in plain English.
+    </p>
+
+    <div class="agent-intro">
+      <h3>How to use</h3>
+      <ol>
+        <li><strong>Copy</strong> the entire block below.</li>
+        <li><strong>Paste it</strong> as your first message to the AI (or as the system prompt).</li>
+        <li><strong>Follow up</strong> in the same chat with your test request, e.g. <em>"Create a 20-word Grade 4 spelling bee"</em> or <em>"Make a 15-question biology multiple choice quiz"</em>.</li>
+        <li><strong>Save</strong> the AI's output as <code>mytest.json</code>.</li>
+        <li><strong>Import</strong> it in Quizbee: Tests → Import → select the file.</li>
+      </ol>
+    </div>
+
+    <div class="copy-wrap">
+      <div class="code-wrap" id="agent-ctx-block"><pre>
+You are a test builder for Quizbee, a self-hosted assessment platform.
+Your only job is to output a single valid JSON object that can be imported directly into Quizbee.
+Output ONLY the JSON — no markdown fences, no explanation, no extra text.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TOP-LEVEL STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{
+  "title": "string — test name",
+  "description": "string or null",
+  "question_count_mode": "all",          // always "all" unless told to use random draw
+  "draw_count": null,                     // integer only when question_count_mode is "draw"
+  "time_limit_minutes": null,             // integer (e.g. 30) or null for untimed
+  "show_correct_answers": true,           // true = show answers after submission
+  "blocks": [ ...array of blocks... ]
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BLOCK STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Each block is a group of questions (usually one question per block).
+Always set context_json to null — audio is added manually after import.
+
+{
+  "title": "string — block label, e.g. 'Word 1' or 'Question 1'",
+  "context_json": null,
+  "questions": [ ...array of questions... ]
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUESTION STRUCTURE — COMMON FIELDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Every question has these fields:
+
+{
+  "type": "...",              // see types below
+  "points": 1,                // integer, default 1
+  "review_required": false,   // true only for long_text and file_upload
+  "prompt_json": {            // the question text — always this exact wrapper
+    "type": "doc",
+    "content": [{
+      "type": "paragraph",
+      "content": [{ "type": "text", "text": "YOUR QUESTION TEXT HERE" }]
+    }]
+  },
+  "correct_answer": "...",   // see encoding per type below
+  "options_json": null        // see encoding per type below
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUESTION TYPES — FULL REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. MULTIPLE CHOICE  (one correct answer, auto-scored)
+   "type": "multiple_choice"
+   "review_required": false
+   "options_json": ["Option A", "Option B", "Option C", "Option D"]
+   "correct_answer": "Option B"   ← must be the exact text of the correct option
+
+   Example:
+   {
+     "type": "multiple_choice", "points": 1, "review_required": false,
+     "prompt_json": { "type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"What is the capital of France?"}]}] },
+     "options_json": ["London", "Paris", "Berlin", "Madrid"],
+     "correct_answer": "Paris"
+   }
+
+──────────────────────────────────────────
+
+2. MULTIPLE SELECT  (one or more correct answers, all-or-nothing scoring)
+   "type": "multiple_select"
+   "review_required": false
+   "options_json": ["A", "B", "C", "D"]
+   "correct_answer": "[\"A\", \"C\"]"   ← JSON array encoded as a string
+
+   Example:
+   {
+     "type": "multiple_select", "points": 2, "review_required": false,
+     "prompt_json": { "type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Which are mammals? Select all that apply."}]}] },
+     "options_json": ["Dolphin", "Shark", "Bat", "Salmon"],
+     "correct_answer": "[\"Dolphin\", \"Bat\"]"
+   }
+
+──────────────────────────────────────────
+
+3. TRUE / FALSE  (auto-scored)
+   "type": "true_false"
+   "review_required": false
+   "options_json": null
+   "correct_answer": "true"   ← must be the string "true" or "false"
+
+   Example:
+   {
+     "type": "true_false", "points": 1, "review_required": false,
+     "prompt_json": { "type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"The Earth orbits the Sun."}]}] },
+     "options_json": null,
+     "correct_answer": "true"
+   }
+
+──────────────────────────────────────────
+
+4. SHORT TEXT — AUTO-SCORED  (exact match, case-insensitive)
+   Use for spelling bees, fill-in-the-blank, single-word answers.
+   "type": "short_text"
+   "review_required": false
+   "options_json": null
+   "correct_answer": "expected word"
+
+   Example:
+   {
+     "type": "short_text", "points": 1, "review_required": false,
+     "prompt_json": { "type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Type the word you hear."}]}] },
+     "options_json": null,
+     "correct_answer": "necessary"
+   }
+
+──────────────────────────────────────────
+
+5. LONG TEXT / ESSAY  (manual review, no auto-scoring)
+   "type": "long_text"
+   "review_required": true
+   "options_json": null
+   "correct_answer": null
+
+   Example:
+   {
+     "type": "long_text", "points": 10, "review_required": true,
+     "prompt_json": { "type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Explain the causes of World War I in your own words."}]}] },
+     "options_json": null,
+     "correct_answer": null
+   }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RULES — READ CAREFULLY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Output ONLY the JSON object. No markdown, no comments inside the JSON.
+- Every question MUST have prompt_json using the doc/paragraph/text wrapper shown above.
+- Never omit any field — use null for optional fields you don't need.
+- For multiple_choice: correct_answer must be the exact string from options_json.
+- For multiple_select: correct_answer must be a JSON array encoded as a string: "[\"A\", \"B\"]"
+- For true_false: correct_answer is always the string "true" or "false", never a boolean.
+- For short_text auto-scoring: review_required must be false and correct_answer must be a string.
+- For long_text: review_required must be true and correct_answer must be null.
+- context_json is always null — never generate media references.
+- Validate that every correct_answer for multiple_choice exactly matches one entry in options_json.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMPLETE MINIMAL EXAMPLE (2-block test)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{
+  "title": "Sample Quiz",
+  "description": null,
+  "question_count_mode": "all",
+  "draw_count": null,
+  "time_limit_minutes": null,
+  "show_correct_answers": true,
+  "blocks": [
+    {
+      "title": "Question 1",
+      "context_json": null,
+      "questions": [{
+        "type": "multiple_choice",
+        "points": 1,
+        "review_required": false,
+        "prompt_json": {"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"What is 2 + 2?"}]}]},
+        "options_json": ["3", "4", "5", "6"],
+        "correct_answer": "4"
+      }]
+    },
+    {
+      "title": "Question 2",
+      "context_json": null,
+      "questions": [{
+        "type": "true_false",
+        "points": 1,
+        "review_required": false,
+        "prompt_json": {"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"The sky is blue."}]}]},
+        "options_json": null,
+        "correct_answer": "true"
+      }]
+    }
+  ]
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NOW DESCRIBE THE TEST YOU WANT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</pre></div>
+      <button class="copy-btn" onclick="copyAgentCtx(this)">Copy</button>
+    </div>
+
+    <div class="callout callout-info" style="margin-top:1.5rem;">
+      <span class="callout-icon">💡</span>
+      <span>
+        The last line <strong>"NOW DESCRIBE THE TEST YOU WANT"</strong> is a cue — after pasting, just type your request
+        in the same message or the next one. Example: <em>"Create a 20-word Grade 5 spelling bee. One short_text question per block titled Word 1, Word 2, etc. No time limit."</em>
+      </span>
+    </div>
+
+  </section>
+
 </div><!-- /page-body -->
+
+<script>
+function copyAgentCtx(btn) {
+  const pre = document.getElementById('agent-ctx-block').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(function() {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
 
 <!-- ── FOOTER ── -->
 <footer>
