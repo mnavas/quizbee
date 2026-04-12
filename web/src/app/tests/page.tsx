@@ -224,7 +224,7 @@ function QrModal({ url, onClose }: { url: string; onClose: () => void }) {
 // ── Practice QR Modal ─────────────────────────────────────────────────────────
 
 function PracticeQrModal({ testId, baseUrl, onClose }: { testId: string; baseUrl: string; onClose: () => void }) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/tests/${testId}/practice-bundle`;
+  const url = `${baseUrl.replace(/\/$/, "")}/api/v1/tests/${testId}/practice-bundle`;
   const [dataUrl, setDataUrl] = useState("");
   useEffect(() => {
     QRCode.toDataURL(url, { width: 280, margin: 2, color: { dark: "#111827", light: "#ffffff" } })

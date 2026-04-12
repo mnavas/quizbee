@@ -638,6 +638,57 @@ def _rewrite_media_ids(node: Any, id_map: dict[str, str]) -> None:
                 _rewrite_media_ids(v, id_map)
 
 
+def _extract_text(node: Any) -> str:
+    """Walk a Tiptap JSON doc tree and return concatenated plain text."""
+    if not node or not isinstance(node, dict):
+        return ""
+    if node.get("type") == "text":
+        return node.get("text", "")
+    block_types = {"paragraph", "heading", "blockquote", "listItem", "bulletList", "orderedList"}
+    parts: list[str] = []
+    for child in node.get("content") or []:
+        parts.append(_extract_text(child))
+    sep = " " if node.get("type") in block_types else ""
+    return sep.join(p for p in parts if p).strip()
+
+
+def _to_practice_bundle(test: Test, questions_map: dict[str, Question]) -> dict:
+    """Build the normalized TestBundle payload expected by the mobile app."""
+    blocks_out = []
+    for block in sorted(test.blocks, key=lambda b: b.order):
+        questions_out = []
+        for bq in sorted(block.block_questions, key=lambda x: x.order):
+            q = questions_map.get(bq.question_id)  # type: ignore[assignment]
+            if not q:
+                continue
+            options: list[dict] | None = None
+            if isinstance(q.options_json, list):
+                options = [
+                    {"id": opt.get("id", ""), "text": _extract_text(opt.get("content_json"))}
+                    for opt in q.options_json
+                ]
+            questions_out.append({
+                "id": q.id,
+                "type": q.type,
+                "prompt": q.prompt_json,
+                "options": options,
+                "correct_answer": q.correct_answer,
+                "points": q.points,
+                "tags": q.tags or [],
+            })
+        blocks_out.append({
+            "id": block.id,
+            "title": block.title or "",
+            "questions": questions_out,
+        })
+    return {
+        "id": test.id,
+        "title": test.title,
+        "show_correct_answers": test.show_correct_answers,
+        "blocks": blocks_out,
+    }
+
+
 def _test_export_payload(test: Test, questions_map: dict[str, Question]) -> dict:
     """Build the portable JSON payload for a test (used by both JSON and ZIP export)."""
     blocks_data = []
@@ -816,7 +867,7 @@ async def practice_bundle(
         for q in q_result.scalars():
             questions_map[q.id] = q
 
-    return JSONResponse(content=_test_export_payload(test, questions_map))
+    return JSONResponse(content=_to_practice_bundle(test, questions_map))
 
 
 @router.post("/import", response_model=TestOut, status_code=status.HTTP_201_CREATED)
