@@ -170,9 +170,11 @@ function questionToForm(blockIdx: number, q: QuestionData): QFormState {
     type: q.type,
     prompt_json: q.prompt_json,
     options: opts.length ? opts : [{ id: "a", text: "" }],
-    correct_answer: typeof q.correct_answer === "string"
-      ? q.correct_answer
-      : JSON.stringify(q.correct_answer ?? ""),
+    correct_answer: q.type === "short_text"
+      ? (q.correct_answer?.text ?? "")
+      : typeof q.correct_answer === "string"
+        ? q.correct_answer
+        : JSON.stringify(q.correct_answer ?? ""),
     explanation_json: q.explanation_json,
     points: q.points,
     tags: (q.tags || []).join(", "),
@@ -312,6 +314,11 @@ export default function TestForm({ testId }: Props) {
       if (hasOptions) {
         payload.options = qForm.options;
         payload.correct_answer = qForm.correct_answer || null;
+      }
+      if (qForm.type === "short_text") {
+        payload.correct_answer = qForm.correct_answer.trim()
+          ? { text: qForm.correct_answer.trim() }
+          : null;
       }
       if (isMedia && qForm.media_file_id) {
         payload.media_ref = { media_file_id: qForm.media_file_id, mime_type: qForm.media_mime_type };
@@ -648,6 +655,18 @@ export default function TestForm({ testId }: Props) {
                   value={qForm.prompt_json}
                   onChange={(json) => setQ("prompt_json", json)}
                   placeholder="Question prompt…"
+                />
+              </div>
+            )}
+
+            {qForm.type === "short_text" && (
+              <div>
+                <label className="label">Correct answer (exact match, case-insensitive)</label>
+                <input
+                  value={qForm.correct_answer}
+                  onChange={(e) => setQ("correct_answer", e.target.value)}
+                  className="input w-full"
+                  placeholder='e.g. "necessary" for a spelling question'
                 />
               </div>
             )}
