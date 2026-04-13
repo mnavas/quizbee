@@ -15,6 +15,7 @@ import os
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.db import Base, get_db
@@ -31,7 +32,7 @@ TEST_DB_URL = os.environ.get(
 
 # ── Engine & session factory ──────────────────────────────────────────────────
 
-test_engine = create_async_engine(TEST_DB_URL, echo=False)
+test_engine = create_async_engine(TEST_DB_URL, echo=False, poolclass=NullPool)
 TestSessionLocal = async_sessionmaker(test_engine, expire_on_commit=False)
 
 
@@ -39,7 +40,7 @@ TestSessionLocal = async_sessionmaker(test_engine, expire_on_commit=False)
 
 @pytest.fixture(scope="session")
 def event_loop():
-    """Use a single event loop for the whole test session."""
+    """Single event loop for the whole session — required for session-scoped async fixtures."""
     loop = asyncio.new_event_loop()
     yield loop
     loop.close()
