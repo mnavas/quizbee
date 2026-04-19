@@ -808,7 +808,7 @@ async def export_test(
             questions_map[q.id] = q
 
     payload = _test_export_payload(test, questions_map)
-    slug = test.title.lower().replace(" ", "_")[:30]
+    slug = test.title.lower().encode("ascii", "ignore").decode().replace(" ", "_")[:30]
 
     # Collect all media_file_ids referenced anywhere in the test
     all_media_ids: set[str] = set()
@@ -1129,7 +1129,7 @@ async def export_test_questions(
         "questions": questions_data,
     }
 
-    slug = test.title.lower().replace(" ", "_")[:30]
+    slug = test.title.lower().encode("ascii", "ignore").decode().replace(" ", "_")[:30]
     return JSONResponse(
         content=payload,
         headers={"Content-Disposition": f'attachment; filename="quizbee_{slug}_questions.json"'},
