@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import RichTextEditor from "@/components/RichTextEditor";
 import RichTextViewer, { tiptapToText } from "@/components/RichTextViewer";
+import { useToast } from "@/components/Toast";
 import {
   DndContext, closestCenter, KeyboardSensor, PointerSensor,
   useSensor, useSensors, type DragEndEvent,
@@ -219,10 +220,12 @@ type Props = { testId?: string };
 
 export default function TestForm({ testId }: Props) {
   const router = useRouter();
+  const toast = useToast();
   const [settings, setSettings] = useState(defaultSettings);
   const [blocks, setBlocks] = useState<Block[]>([{ title: "", context_json: null, questions: [] }]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [hasChanges, setHasChanges] = useState(false);
 
   const [qForm, setQForm] = useState<QFormState | null>(null);
   const [qSaving, setQSaving] = useState(false);
@@ -242,6 +245,14 @@ export default function TestForm({ testId }: Props) {
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
+
+  // Warn before closing tab with unsaved changes
+  useEffect(() => {
+    if (!hasChanges) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [hasChanges]);
 
   // Scroll inline form into view whenever it opens
   useEffect(() => {
@@ -283,6 +294,8 @@ export default function TestForm({ testId }: Props) {
             }))
           : [{ title: "", context_json: null, questions: [] }]
       );
+      // Reset after loading so only user edits trigger the unsaved warning
+      setHasChanges(false);
     });
   }, [testId]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -290,11 +303,13 @@ export default function TestForm({ testId }: Props) {
 
   function addBlock() {
     setBlocks([...blocks, { title: "", context_json: null, questions: [] }]);
+    setHasChanges(true);
   }
 
   function removeBlock(i: number) {
     if (qForm?.blockIdx === i) setQForm(null);
     setBlocks(blocks.filter((_, idx) => idx !== i));
+    setHasChanges(true);
   }
 
   function removeQuestionFromBlock(blockIdx: number, qId: string) {
@@ -302,6 +317,7 @@ export default function TestForm({ testId }: Props) {
     setBlocks(blocks.map((b, i) =>
       i !== blockIdx ? b : { ...b, questions: b.questions.filter((q) => q.question_id !== qId) }
     ));
+    setHasChanges(true);
   }
 
   function handleBlockDragEnd(event: DragEndEvent) {
@@ -313,6 +329,7 @@ export default function TestForm({ testId }: Props) {
       if (oldIdx < 0 || newIdx < 0) return prev;
       return arrayMove(prev, oldIdx, newIdx);
     });
+    setHasChanges(true);
   }
 
   function handleQuestionDragEnd(blockIdx: number, event: DragEndEvent) {
@@ -325,6 +342,7 @@ export default function TestForm({ testId }: Props) {
       if (oldIdx < 0 || newIdx < 0) return b;
       return { ...b, questions: arrayMove(b.questions, oldIdx, newIdx) };
     }));
+    setHasChanges(true);
   }
 
   // ── Duplicate question ─────────────────────────────────────────────────────
@@ -365,6 +383,7 @@ export default function TestForm({ testId }: Props) {
         qs.splice(insertAt, 0, { question_id: created.id, order: insertAt, data: created });
         return { ...b, questions: qs };
       }));
+      setHasChanges(true);
     } catch {
       // silent — user can retry
     }
@@ -460,6 +479,7 @@ export default function TestForm({ testId }: Props) {
           }
         ));
       }
+      setHasChanges(true);
       setQForm(null);
     } catch (e: any) {
       setQError(e?.response?.data?.detail ?? "Save failed");
@@ -491,6 +511,7 @@ export default function TestForm({ testId }: Props) {
           .map((q, idx) => ({ question_id: q.id, order: b.questions.length + idx, data: q }));
         return { ...b, questions: [...b.questions, ...newBqs] };
       }));
+      setHasChanges(true);
       setImportQMsg(`✓ Imported ${created} question${created !== 1 ? "s" : ""} into block 1`);
     } catch (e: any) {
       setImportQMsg(`✗ ${e?.response?.data?.detail ?? "Import failed"}`);
@@ -527,13 +548,18 @@ export default function TestForm({ testId }: Props) {
       } else {
         await api.post("/tests", payload);
       }
+      setHasChanges(false);
+      toast("Test saved successfully");
       router.push("/tests");
     } catch (e: any) {
       setError(e?.response?.data?.detail ?? "Save failed");
     } finally { setSaving(false); }
   }
 
-  function set(key: string, value: any) { setSettings((s) => ({ ...s, [key]: value })); }
+  function set(key: string, value: any) {
+    setSettings((s) => ({ ...s, [key]: value }));
+    setHasChanges(true);
+  }
 
   const needsOptions = qForm ? ["multiple_choice", "multiple_select", "true_false"].includes(qForm.type) : false;
   const isMediaForm = qForm ? ["audio_prompt", "video_prompt"].includes(qForm.type) : false;
@@ -541,7 +567,7 @@ export default function TestForm({ testId }: Props) {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="max-w-2xl space-y-6">
+    <div className="max-w-2xl space-y-6 pb-24">
       {error && <p className="text-sm text-red-600 bg-red-50 rounded px-3 py-2">{error}</p>}
 
       {/* Settings */}
@@ -724,7 +750,10 @@ export default function TestForm({ testId }: Props) {
                           </button>
                           <input
                             value={block.title}
-                            onChange={(e) => setBlocks(blocks.map((b, i) => i === bi ? { ...b, title: e.target.value } : b))}
+                            onChange={(e) => {
+                              setBlocks(blocks.map((b, i) => i === bi ? { ...b, title: e.target.value } : b));
+                              setHasChanges(true);
+                            }}
                             placeholder={`Block ${bi + 1} title (optional)`}
                             className="input flex-1"
                           />
@@ -741,7 +770,10 @@ export default function TestForm({ testId }: Props) {
                         {/* Block context */}
                         <BlockContextEditor
                           value={block.context_json}
-                          onChange={(json) => setBlocks(blocks.map((b, i) => i === bi ? { ...b, context_json: json } : b))}
+                          onChange={(json) => {
+                            setBlocks(blocks.map((b, i) => i === bi ? { ...b, context_json: json } : b));
+                            setHasChanges(true);
+                          }}
                           editorKey={bi}
                           blockTitle={block.title}
                         />
@@ -947,11 +979,22 @@ export default function TestForm({ testId }: Props) {
         <button onClick={addBlock} className="text-sm text-amber-600 hover:underline">+ Add block</button>
       </div>
 
-      <div className="flex justify-end gap-3">
-        <button onClick={() => router.push("/tests")} className="btn-ghost">Cancel</button>
-        <button onClick={handleSave} disabled={saving} className="btn-primary">
-          {saving ? "Saving…" : "Save Test"}
-        </button>
+      {/* Sticky save bar */}
+      <div className="fixed bottom-0 left-56 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 px-8 py-4 flex items-center justify-between z-40">
+        {hasChanges ? (
+          <span className="text-xs text-amber-600 font-medium flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
+            Unsaved changes
+          </span>
+        ) : (
+          <span />
+        )}
+        <div className="flex items-center gap-3">
+          <button onClick={() => router.push("/tests")} className="btn-ghost">Cancel</button>
+          <button onClick={handleSave} disabled={saving} className="btn-primary">
+            {saving ? "Saving…" : "Save Test"}
+          </button>
+        </div>
       </div>
     </div>
   );

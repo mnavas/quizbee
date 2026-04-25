@@ -2,17 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { useToast } from "@/components/Toast";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 
 type User = { id: string; email: string; role: string; is_active: boolean };
 
 const ROLES = ["admin", "manager", "reviewer", "candidate"];
 
 export default function UsersPage() {
+  const toast = useToast();
   const [users, setUsers] = useState<User[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ email: "", password: "", role: "candidate" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [confirmDeactivate, setConfirmDeactivate] = useState<User | null>(null);
 
   async function load() {
     setUsers((await api.get("/users")).data);
@@ -26,14 +30,16 @@ export default function UsersPage() {
       setShowForm(false);
       setForm({ email: "", password: "", role: "candidate" });
       load();
+      toast("User created");
     } catch (e: any) { setError(e?.response?.data?.detail ?? "Failed"); }
     finally { setSaving(false); }
   }
 
   async function handleDeactivate(id: string) {
-    if (!confirm("Deactivate this user?")) return;
     await api.delete(`/users/${id}`);
     load();
+    toast("User deactivated", "info");
+    setConfirmDeactivate(null);
   }
 
   return (
@@ -50,7 +56,7 @@ export default function UsersPage() {
               <p className="text-xs text-gray-400">{u.role} · {u.is_active ? "Active" : "Inactive"}</p>
             </div>
             {u.is_active && (
-              <button onClick={() => handleDeactivate(u.id)} className="text-xs text-red-500 hover:underline">Deactivate</button>
+              <button onClick={() => setConfirmDeactivate(u)} className="text-xs text-red-500 hover:underline">Deactivate</button>
             )}
           </div>
         ))}
@@ -75,6 +81,16 @@ export default function UsersPage() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!confirmDeactivate}
+        title="Deactivate user"
+        message={`Deactivate ${confirmDeactivate?.email}? They will no longer be able to sign in.`}
+        confirmLabel="Deactivate"
+        danger
+        onConfirm={() => confirmDeactivate && handleDeactivate(confirmDeactivate.id)}
+        onCancel={() => setConfirmDeactivate(null)}
+      />
     </div>
   );
 }

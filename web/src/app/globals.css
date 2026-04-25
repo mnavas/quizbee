@@ -16,6 +16,18 @@
     @apply text-sm text-gray-500 hover:text-gray-800 transition;
   }
   .card {
-    @apply bg-white rounded-xl border border-gray-200 px-5 py-4;
+    @apply bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4;
   }
+  .btn-outline {
+    @apply flex items-center gap-1.5 text-sm px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 transition disabled:opacity-50;
+  }
+}
+
+@keyframes toast-enter {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+.toast-enter {
+  animation: toast-enter 0.2s ease forwards;
 }
