@@ -558,7 +558,7 @@ export default function TestForm({ testId }: Props) {
             <input type="checkbox" checked={settings.practice_enabled as boolean} onChange={(e) => set("practice_enabled", e.target.checked)} className="w-4 h-4 accent-amber-500" />
             <div>
               <p className="text-sm font-medium text-gray-800">Enable practice mode</p>
-              <p className="text-xs text-gray-500">Allows the Quizbee mobile app to download this test as a practice bundle via QR code.</p>
+              <p className="text-xs text-gray-500">Allows the QuizBuilder mobile app to download this test as a practice bundle via QR code.</p>
             </div>
           </label>
         </div>

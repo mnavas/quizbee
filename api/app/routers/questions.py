@@ -236,7 +236,7 @@ async def bulk_import_questions(
     db: AsyncSession = Depends(get_db),
 ):
     """Import a list of questions from a questions.json file into the tenant's question bank.
-    Accepts either {quizbee_version, questions: [...]} or a bare list.
+    Accepts either {quizbuilder_version, questions: [...]} or a bare list.
     """
     questions_data: list = body.get("questions", body) if isinstance(body, dict) else body
     if not isinstance(questions_data, list):

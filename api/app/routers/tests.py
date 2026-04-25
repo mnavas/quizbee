@@ -729,7 +729,7 @@ def _test_export_payload(test: Test, questions_map: dict[str, Question]) -> dict
         })
 
     return {
-        "quizbee_version": "1.0",
+        "quizbuilder_version": "1.0",
         "exported_at": datetime.now(timezone.utc).isoformat(),
         "test": {
             "title": test.title,
@@ -822,7 +822,7 @@ async def export_test(
     if not all_media_ids:
         return JSONResponse(
             content=payload,
-            headers={"Content-Disposition": f'attachment; filename="quizbee_{slug}.json"'},
+            headers={"Content-Disposition": f'attachment; filename="quizbuilder_{slug}.json"'},
         )
 
     # Has media → load media records and build ZIP
@@ -844,7 +844,7 @@ async def export_test(
     return StreamingResponse(
         iter([buf.read()]),
         media_type="application/zip",
-        headers={"Content-Disposition": f'attachment; filename="quizbee_{slug}.zip"'},
+        headers={"Content-Disposition": f'attachment; filename="quizbuilder_{slug}.zip"'},
     )
 
 
@@ -884,8 +884,8 @@ async def import_test(
     user: User = Depends(require_role("admin", "manager")),
     db: AsyncSession = Depends(get_db),
 ):
-    """Import a test from a Quizbee JSON export. Creates all questions and the test in one transaction."""
-    # Support both {quizbee_version, test: {...}} envelope and bare test dict
+    """Import a test from a QuizBuilder JSON export. Creates all questions and the test in one transaction."""
+    # Support both {quizbuilder_version, test: {...}} envelope and bare test dict
     test_data: dict = body.get("test", body)
 
     # Create questions block by block, preserving order
@@ -1123,7 +1123,7 @@ async def export_test_questions(
         })
 
     payload: dict[str, Any] = {
-        "quizbee_version": "1.0",
+        "quizbuilder_version": "1.0",
         "exported_at": datetime.now(timezone.utc).isoformat(),
         "source_test": test.title,
         "questions": questions_data,
@@ -1132,5 +1132,5 @@ async def export_test_questions(
     slug = test.title.lower().encode("ascii", "ignore").decode().replace(" ", "_")[:30]
     return JSONResponse(
         content=payload,
-        headers={"Content-Disposition": f'attachment; filename="quizbee_{slug}_questions.json"'},
+        headers={"Content-Disposition": f'attachment; filename="quizbuilder_{slug}_questions.json"'},
     )

@@ -1,5 +1,5 @@
 """
-Generate a 1000-question Japanese practice test for Quizbee.
+Generate a 1000-question Japanese practice test for QuizBuilder.
 - Prompts are in hiragana / katakana / kanji only
 - English / romaji appears only in answer options and explanations
 - draw_count = 5, randomize_questions = true  → 5 random questions per session
@@ -659,11 +659,11 @@ questions = questions_pool[:1000]
 print(f"Generated {len(questions)} questions from pool of {len(questions_pool)}")
 
 # ---------------------------------------------------------------------------
-# Pack into Quizbee export format — one block, all questions
+# Pack into QuizBuilder export format — one block, all questions
 # ---------------------------------------------------------------------------
 
 payload = {
-    "quizbee_version": "1.0",
+    "quizbuilder_version": "1.0",
     "exported_at": "2026-04-19T00:00:00+00:00",
     "test": {
         "title": "日本語練習",

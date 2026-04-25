@@ -95,7 +95,7 @@ Soft-delete a question.
 Import a list of questions from a `questions.json` file.
 ```json
 // Accepts bare list or envelope
-{"quizbee_version": "1.0", "questions": [...]}
+{"quizbuilder_version": "1.0", "questions": [...]}
 ```
 Response: `{"created": 12, "question_ids": ["...", ...]}`
 
@@ -149,11 +149,11 @@ Return full test content with question details for admin preview — no session 
 
 ### `GET /tests/{id}/export`
 Export a test.
-- No media → returns `quizbee_<slug>.json`
-- Has media → returns `quizbee_<slug>.zip` containing `test.json` + `assets/`
+- No media → returns `quizbuilder_<slug>.json`
+- Has media → returns `quizbuilder_<slug>.zip` containing `test.json` + `assets/`
 
 ### `POST /tests/import`
-Import a test from a Quizbee JSON export (request body).
+Import a test from a QuizBuilder JSON export (request body).
 
 ### `POST /tests/import-bundle`
 Import a test from a ZIP bundle (`multipart/form-data`, field `file`). Re-uploads all media assets and remaps IDs.

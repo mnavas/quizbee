@@ -38,8 +38,8 @@ export default function NavSidebar() {
     <aside className="w-56 min-h-screen bg-white border-r border-gray-200 flex flex-col">
       <div className="px-5 py-4 border-b border-gray-100">
         <div className="flex items-center gap-2.5">
-          <Image src="/icon-64.png" alt="Quizbee" width={32} height={32} className="shrink-0" />
-          <span className="text-xl font-bold text-amber-500">Quizbee</span>
+          <Image src="/icon-64.png" alt="QuizBuilder" width={32} height={32} className="shrink-0" />
+          <span className="text-xl font-bold text-amber-500">QuizBuilder</span>
         </div>
       </div>
       <nav className="flex-1 px-3 py-4 space-y-1">

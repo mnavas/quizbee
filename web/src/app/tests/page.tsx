@@ -234,7 +234,7 @@ function PracticeQrModal({ testId, baseUrl, onClose }: { testId: string; baseUrl
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div className="bg-white rounded-2xl p-6 shadow-xl max-w-xs w-full text-center" onClick={(e) => e.stopPropagation()}>
         <p className="text-sm font-semibold text-gray-700 mb-1">Practice QR</p>
-        <p className="text-xs text-gray-400 mb-3">Scan with the Quizbee mobile app to download this bundle.</p>
+        <p className="text-xs text-gray-400 mb-3">Scan with the QuizBuilder mobile app to download this bundle.</p>
         {dataUrl
           // eslint-disable-next-line @next/next/no-img-element
           ? <img src={dataUrl} alt="Practice QR code" className="mx-auto rounded-lg" />
@@ -402,7 +402,7 @@ export default function TestsPage() {
     try {
       const res = await api.get(`/tests/${id}/export`, { responseType: "blob" });
       const isZip = res.headers["content-type"]?.includes("zip");
-      triggerDownload(res.data, `quizbee_${slug}.${isZip ? "zip" : "json"}`);
+      triggerDownload(res.data, `quizbuilder_${slug}.${isZip ? "zip" : "json"}`);
     } catch { alert("Export failed"); }
   }
 
@@ -411,7 +411,7 @@ export default function TestsPage() {
     try {
       const res = await api.get(`/tests/${id}/export`, { responseType: "blob" });
       const isZip = res.headers["content-type"]?.includes("zip");
-      triggerDownload(res.data, `quizbee_${slug}.${isZip ? "zip" : "json"}`);
+      triggerDownload(res.data, `quizbuilder_${slug}.${isZip ? "zip" : "json"}`);
     } catch { alert("Download failed"); }
   }
 

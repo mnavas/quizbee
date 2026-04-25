@@ -1,5 +1,5 @@
 {
-  "quizbee_version": "1.0",
+  "quizbuilder_version": "1.0",
   "description": "Driving theory practice — 20 questions covering road signs, rules, speed limits, and safety. Each attempt draws 15 random blocks (1 question each) so the test is different every time. Demonstrates Community Edition block-level random draw.",
   "test": {
     "title": "Driving Theory Practice",

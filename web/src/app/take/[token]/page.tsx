@@ -233,8 +233,8 @@ export default function TakePage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white rounded-2xl shadow p-8 w-full max-w-sm space-y-5">
         <div className="flex items-center justify-center gap-2.5">
-          <Image src="/icon-64.png" alt="Quizbee" width={32} height={32} />
-          <h1 className="text-2xl font-bold text-amber-500">Quizbee</h1>
+          <Image src="/icon-64.png" alt="QuizBuilder" width={32} height={32} />
+          <h1 className="text-2xl font-bold text-amber-500">QuizBuilder</h1>
         </div>
         <p className="text-sm text-gray-500 text-center">Enter your email to start (optional)</p>
         {error && <p className="text-sm text-red-600 bg-red-50 rounded px-3 py-2">{error}</p>}
@@ -435,8 +435,8 @@ export default function TakePage() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Image src="/icon-64.png" alt="Quizbee" width={24} height={24} />
-          <span className="text-amber-500 font-bold">Quizbee</span>
+          <Image src="/icon-64.png" alt="QuizBuilder" width={24} height={24} />
+          <span className="text-amber-500 font-bold">QuizBuilder</span>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-xs text-gray-400">{totalAnswered}/{questions.length} answered</span>

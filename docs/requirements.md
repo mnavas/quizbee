@@ -1,4 +1,4 @@
-# Quizbee — Product Requirements
+# QuizBuilder — Product Requirements
 **Version:** 0.1
 **Last Updated:** 2026-04-04
 **Stage:** Pre-development
@@ -7,7 +7,7 @@
 
 ## 1. Product Overview
 
-Quizbee is an online assessment platform for creating, administering, and scoring rich tests. It supports two primary modes: structured exams (sync or async, with submission tracking and grading) and practice (self-paced, offline-capable, with flashcard and partner modes). Content is rich — formulas, images, audio, video, and styled text — to support academic exams, psychological evaluations, language proficiency tests, and more.
+QuizBuilder is an online assessment platform for creating, administering, and scoring rich tests. It supports two primary modes: structured exams (sync or async, with submission tracking and grading) and practice (self-paced, offline-capable, with flashcard and partner modes). Content is rich — formulas, images, audio, video, and styled text — to support academic exams, psychological evaluations, language proficiency tests, and more.
 
 ---
 

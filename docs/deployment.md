@@ -93,22 +93,22 @@ Two Docker volumes are created automatically:
 
 ```bash
 # Database
-docker exec quizbee-db-1 pg_dump -U quizbee quizbee | gzip > quizbee_db_$(date +%Y%m%d).sql.gz
+docker exec quizbuilder-db-1 pg_dump -U quizbuilder quizbuilder | gzip > quizbuilder_db_$(date +%Y%m%d).sql.gz
 
 # Media files
-docker run --rm -v quizbee_media-data:/data/media -v $(pwd):/backup alpine \
-  tar czf /backup/quizbee_media_$(date +%Y%m%d).tar.gz /data/media
+docker run --rm -v quizbuilder_media-data:/data/media -v $(pwd):/backup alpine \
+  tar czf /backup/quizbuilder_media_$(date +%Y%m%d).tar.gz /data/media
 ```
 
 ### Restore
 
 ```bash
 # Database
-gunzip -c quizbee_db_20260408.sql.gz | docker exec -i quizbee-db-1 psql -U quizbee quizbee
+gunzip -c quizbuilder_db_20260408.sql.gz | docker exec -i quizbuilder-db-1 psql -U quizbuilder quizbuilder
 
 # Media files
-docker run --rm -v quizbee_media-data:/data/media -v $(pwd):/backup alpine \
-  tar xzf /backup/quizbee_media_20260408.tar.gz -C /
+docker run --rm -v quizbuilder_media-data:/data/media -v $(pwd):/backup alpine \
+  tar xzf /backup/quizbuilder_media_20260408.tar.gz -C /
 ```
 
 ---

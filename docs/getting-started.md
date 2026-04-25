@@ -10,8 +10,8 @@
 ## Quick Start
 
 ```bash
-git clone <your-repo-url> quizbee
-cd quizbee
+git clone <your-repo-url> quizbuilder
+cd quizbuilder
 cp .env.example .env   # edit before running
 docker compose up -d
 ```
@@ -53,7 +53,7 @@ ALLOWED_ORIGINS=http://localhost:3000
 | `SECRET_KEY` | — | JWT signing key — must be secret and stable |
 | `MEDIA_ROOT` | `/data/media` | Filesystem path for uploaded files |
 | `ALLOWED_ORIGINS` | `http://localhost:3000` | Comma-separated CORS origins |
-| `ADMIN_EMAIL` | `admin@quizbee.local` | Seeded admin email |
+| `ADMIN_EMAIL` | `admin@quizbuilder.local` | Seeded admin email |
 | `ADMIN_PASSWORD` | `changeme` | Seeded admin password — **change immediately** |
 
 ---
@@ -79,14 +79,14 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # Start a local Postgres instance
-docker run -d --name quizbee-db \
-  -e POSTGRES_DB=quizbee \
-  -e POSTGRES_USER=quizbee \
+docker run -d --name quizbuilder-db \
+  -e POSTGRES_DB=quizbuilder \
+  -e POSTGRES_USER=quizbuilder \
   -e POSTGRES_PASSWORD=devpassword \
   -p 5432:5432 postgres:15-alpine
 
 # Create .env in api/
-DATABASE_URL=postgresql+asyncpg://quizbee:devpassword@localhost/quizbee
+DATABASE_URL=postgresql+asyncpg://quizbuilder:devpassword@localhost/quizbuilder
 SECRET_KEY=dev_secret_key_not_for_production
 MEDIA_ROOT=./media
 
@@ -118,17 +118,17 @@ cd examples
 pip install requests gtts   # gtts only needed if no local audio files
 
 # Use pre-downloaded MP3s from examples/spelling_bee_audio/ (no gTTS needed if all present)
-python seed_audio.py --email admin@quizbee.local --password changeme
+python seed_audio.py --email admin@quizbuilder.local --password changeme
 
 # Or point to a folder of your own recordings
 python seed_audio.py \
-  --email admin@quizbee.local \
+  --email admin@quizbuilder.local \
   --password changeme \
   --local-audio /path/to/mp3s
 
 # Random draw: each taker gets 10 random rounds
 python seed_audio.py \
-  --email admin@quizbee.local \
+  --email admin@quizbuilder.local \
   --password changeme \
   --draw 10
 ```

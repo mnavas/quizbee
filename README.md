@@ -1,4 +1,4 @@
-# Quizbee
+# QuizBuilder
 
 Self-hosted online assessment platform. Run your own quiz and test server — spelling bees, multiple-choice exams, reading comprehension, and more. Built with Docker, works offline on a local network.
 
@@ -16,11 +16,11 @@ Install **Docker Desktop**: [docker.com/products/docker-desktop](https://www.doc
 - Mac: download the `.dmg`, drag to Applications, launch Docker Desktop
 - Linux: `curl -fsSL https://get.docker.com | sh`
 
-### 2. Download Quizbee
+### 2. Download QuizBuilder
 
 ```bash
 git clone https://github.com/mnavas/quizbuilder.git
-cd quizbee
+cd quizbuilder
 ```
 
 No Git? Download the [ZIP from GitHub](https://github.com/mnavas/quizbuilder/archive/refs/heads/main.zip) and extract it.

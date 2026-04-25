@@ -43,7 +43,7 @@ You should see version information for FFmpeg.
 If your code is in a Git repository, clone it:
 ```bash
 git clone <your-repository-url>
-cd <your-project-directory> # e.g., cd quizbee/examples
+cd <your-project-directory> # e.g., cd quizbuilder/examples
 ```
 If you're just copying the files ( `spelling_trainer.py`, `audio_download.py`, `spelling_bee.json`, and any audio files you've already downloaded), place them in your desired project directory.
 

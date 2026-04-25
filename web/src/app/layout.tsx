@@ -3,7 +3,7 @@ import "./globals.css";
 import "katex/dist/katex.min.css";
 
 export const metadata: Metadata = {
-  title: "Quizbee",
+  title: "QuizBuilder",
   description: "Online assessment platform",
   icons: {
     icon: [
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     apple: "/icon-192.png",
   },
   openGraph: {
-    title: "Quizbee",
+    title: "QuizBuilder",
     description: "Online assessment platform",
     images: [{ url: "/logo-1200.png", width: 1200, height: 628 }],
   },

@@ -8,7 +8,7 @@ from app.auth import hash_password
 from app.config import settings
 from app.models.core import Tenant, User
 
-logger = logging.getLogger("quizbee")
+logger = logging.getLogger("quizbuilder")
 
 
 def _slugify(text: str) -> str:

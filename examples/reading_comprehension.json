@@ -1,5 +1,5 @@
 {
-  "quizbee_version": "1.0",
+  "quizbuilder_version": "1.0",
   "description": "Reading comprehension — shared passage in block context_json, followed by multiple choice and open questions. Demonstrates TOEFL/academic style.",
   "test": {
     "title": "Reading Comprehension: The Water Cycle",

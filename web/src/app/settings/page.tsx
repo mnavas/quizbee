@@ -53,7 +53,7 @@ export default function SettingsPage() {
         <div>
           <h2 className="text-sm font-semibold text-gray-800 mb-1">Public base URL</h2>
           <p className="text-xs text-gray-500 mb-3">
-            The URL where takers reach your Quizbee instance. Used to build shareable links and QR codes
+            The URL where takers reach your QuizBuilder instance. Used to build shareable links and QR codes
             on the Tests page. Defaults to the current browser origin.
           </p>
           <form onSubmit={handleSave} className="flex gap-2">
@@ -61,7 +61,7 @@ export default function SettingsPage() {
               type="url"
               value={draft}
               onChange={(e) => { setDraft(e.target.value); setSaved(false); }}
-              placeholder="https://quizbee.yourdomain.com"
+              placeholder="https://quizbuilder.yourdomain.com"
               className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono
                          focus:outline-none focus:ring-2 focus:ring-amber-300"
             />
@@ -112,14 +112,14 @@ export default function SettingsPage() {
         {/* About */}
         <div className="border-t border-gray-100 pt-4">
           <h2 className="text-sm font-semibold text-gray-800 mb-1">About</h2>
-          <p className="text-xs text-gray-500 mb-1">Quizbee — self-hosted quiz platform.</p>
+          <p className="text-xs text-gray-500 mb-1">QuizBuilder — self-hosted quiz platform.</p>
           <a
-            href="https://mnavas.github.io/quizbee"
+            href="https://mnavas.github.io/quizbuilder"
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs text-amber-600 hover:underline"
           >
-            mnavas.github.io/quizbee →
+            mnavas.github.io/quizbuilder →
           </a>
         </div>
 

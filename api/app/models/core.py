@@ -1,5 +1,5 @@
 """
-SQLAlchemy ORM models for Quizbee.
+SQLAlchemy ORM models for QuizBuilder.
 
 Domain overview
 ---------------

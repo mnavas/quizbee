@@ -1,6 +1,6 @@
-# Quizbee — Example Tests
+# QuizBuilder — Example Tests
 
-Ready-to-import examples for the Quizbee admin UI.
+Ready-to-import examples for the QuizBuilder admin UI.
 
 ## Examples at a glance
 
@@ -45,17 +45,17 @@ By default it looks for pre-recorded MP3s in `examples/spelling_bee_audio/` (fil
 ```bash
 # Use local MP3s from examples/spelling_bee_audio/ (no gTTS needed if all files present)
 pip install requests
-python seed_audio.py --email admin@quizbee.com --password yourpassword
+python seed_audio.py --email admin@quizbuilder.com --password yourpassword
 
 # Point to a different folder of recordings
-python seed_audio.py --email admin@quizbee.com --password yourpassword --local-audio /path/to/mp3s
+python seed_audio.py --email admin@quizbuilder.com --password yourpassword --local-audio /path/to/mp3s
 
 # Generate everything with gTTS (no local files at all)
 pip install gtts requests
-python seed_audio.py --email admin@quizbee.com --password yourpassword --local-audio /nonexistent
+python seed_audio.py --email admin@quizbuilder.com --password yourpassword --local-audio /nonexistent
 
 # Draw N random rounds per attempt
-python seed_audio.py --email admin@quizbee.com --password yourpassword --draw 10
+python seed_audio.py --email admin@quizbuilder.com --password yourpassword --draw 10
 ```
 
 ---
@@ -129,7 +129,7 @@ When set, `draw_count` draws that many **blocks** at random per attempt. All que
 
 ```json
 {
-  "quizbee_version": "1.0",
+  "quizbuilder_version": "1.0",
   "test": {
     "title": "...",
     "draw_count": null,

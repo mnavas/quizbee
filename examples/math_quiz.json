@@ -1,5 +1,5 @@
 {
-  "quizbee_version": "1.0",
+  "quizbuilder_version": "1.0",
   "description": "Math quiz with LaTeX formulas — algebra and geometry. Demonstrates formula rendering via KaTeX.",
   "test": {
     "title": "Algebra & Geometry Quiz",

@@ -36,8 +36,8 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <div className="flex items-center justify-center gap-3 mb-2">
-            <Image src="/icon-64.png" alt="Quizbee" width={40} height={40} />
-            <h1 className="text-3xl font-bold text-amber-500">Quizbee</h1>
+            <Image src="/icon-64.png" alt="QuizBuilder" width={40} height={40} />
+            <h1 className="text-3xl font-bold text-amber-500">QuizBuilder</h1>
           </div>
           <p className="text-sm text-gray-500">Sign in to your account</p>
         </div>

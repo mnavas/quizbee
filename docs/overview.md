@@ -1,6 +1,6 @@
-# Quizbee — Overview
+# QuizBuilder — Overview
 
-Quizbee is a self-hosted, multi-tenant online assessment platform. Admins build tests with rich content (text, formulas, images, audio, video), publish them via a shareable link, and collect graded results — without any data leaving the host infrastructure.
+QuizBuilder is a self-hosted, multi-tenant online assessment platform. Admins build tests with rich content (text, formulas, images, audio, video), publish them via a shareable link, and collect graded results — without any data leaving the host infrastructure.
 
 ---
 

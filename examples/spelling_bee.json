@@ -1,5 +1,5 @@
 {
-  "quizbee_version": "1.0",
+  "quizbuilder_version": "1.0",
   "description": "Spelling Bee — 10-word static sample. Each block has an audio context (browser TTS fallback) and one short-text question. Use seed_audio.py to import the full 120-word version with real audio recordings from spelling_bee_audio/.",
   "test": {
     "title": "Spelling Bee — Sample (10 words)",

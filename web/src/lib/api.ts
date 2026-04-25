@@ -1,5 +1,5 @@
 /**
- * Axios instance pre-configured for the Quizbee API.
+ * Axios instance pre-configured for the QuizBuilder API.
  *
  * Interceptors handle two concerns automatically:
  * - Request:  reads the `access_token` cookie and injects it as a Bearer header

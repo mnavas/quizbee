@@ -1,5 +1,5 @@
 """
-Generate a driving exam practice test JSON for the Quizbee mobile app.
+Generate a driving exam practice test JSON for the QuizBuilder mobile app.
 40 multiple-choice questions covering US driving rules, signs, and safety.
 
 Run:  python3 gen_driving_exam.py
@@ -181,7 +181,7 @@ for i, (prompt, options, correct) in enumerate(QUESTIONS):
     })
 
 payload = {
-    "quizbee_version": "1.0",
+    "quizbuilder_version": "1.0",
     "exported_at": datetime.now(timezone.utc).isoformat(),
     "test": {
         "title": "US Driver's License Practice Exam",

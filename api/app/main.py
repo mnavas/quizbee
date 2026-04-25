@@ -13,10 +13,10 @@ logging.basicConfig(
     level=logging.INFO,
     format='{"time": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}',
 )
-logger = logging.getLogger("quizbee")
+logger = logging.getLogger("quizbuilder")
 
 app = FastAPI(
-    title="Quizbee API",
+    title="QuizBuilder API",
     version="0.1.0",
     docs_url="/docs",
     redoc_url=None,
@@ -58,7 +58,7 @@ async def log_requests(request: Request, call_next):
     return response
 
 
-api_v1 = FastAPI(title="Quizbee API v1")
+api_v1 = FastAPI(title="QuizBuilder API v1")
 api_v1.include_router(health.router, tags=["health"])
 api_v1.include_router(auth.router, prefix="/auth", tags=["auth"])
 api_v1.include_router(users.router, prefix="/users", tags=["users"])

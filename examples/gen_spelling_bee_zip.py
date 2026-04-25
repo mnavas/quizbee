@@ -1,5 +1,5 @@
 """
-Generate a spelling bee ZIP bundle for the Quizbee mobile app.
+Generate a spelling bee ZIP bundle for the QuizBuilder mobile app.
 Each word gets one block with TTS audio + a short_text question.
 
 Run:  python3 gen_spelling_bee_zip.py
@@ -78,7 +78,7 @@ for i, word in enumerate(WORDS, 1):
     })
 
 payload = {
-    "quizbee_version": "1.0",
+    "quizbuilder_version": "1.0",
     "exported_at": exported_at,
     "test": {
         "title": "Spelling Bee — Grade 5 Practice",

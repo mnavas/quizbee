@@ -30,7 +30,7 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       MEDIA_ROOT: /data/media
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-*}
-      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@quizbee.local}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@quizbuilder.local}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme}
     volumes:
       - media-data:/data/media

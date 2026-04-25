@@ -27,7 +27,7 @@ from app.auth import hash_password
 
 TEST_DB_URL = os.environ.get(
     "TEST_DATABASE_URL",
-    "postgresql+asyncpg://quizbee:quizbee@localhost:5432/quizbee_test",
+    "postgresql+asyncpg://quizbuilder:quizbuilder@localhost:5432/quizbuilder_test",
 )
 
 # ── Engine & session factory ──────────────────────────────────────────────────

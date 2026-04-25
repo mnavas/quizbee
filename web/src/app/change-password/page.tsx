@@ -33,8 +33,8 @@ export default function ChangePasswordPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-sm">
         <div className="flex items-center justify-center gap-2 mb-8">
-          <Image src="/icon.png" alt="Quizbee" width={36} height={36} className="rounded-lg" />
-          <span className="text-2xl font-bold text-amber-500">Quizbee</span>
+          <Image src="/icon.png" alt="QuizBuilder" width={36} height={36} className="rounded-lg" />
+          <span className="text-2xl font-bold text-amber-500">QuizBuilder</span>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">

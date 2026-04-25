@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     secret_key: str
     media_root: str = "/data/media"
     allowed_origins: str = "*"
-    admin_email: str = "admin@quizbee.local"
+    admin_email: str = "admin@quizbuilder.local"
     admin_password: str = "changeme"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
