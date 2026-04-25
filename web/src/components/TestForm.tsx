@@ -261,6 +261,25 @@ export default function TestForm({ testId }: Props) {
     ));
   }
 
+  function moveBlock(i: number, dir: number) {
+    const j = i + dir;
+    if (j < 0 || j >= blocks.length) return;
+    const next = [...blocks];
+    [next[i], next[j]] = [next[j], next[i]];
+    setBlocks(next);
+  }
+
+  function moveQuestion(blockIdx: number, qIdx: number, dir: number) {
+    const j = qIdx + dir;
+    setBlocks(blocks.map((b, i) => {
+      if (i !== blockIdx) return b;
+      if (j < 0 || j >= b.questions.length) return b;
+      const qs = [...b.questions];
+      [qs[qIdx], qs[j]] = [qs[j], qs[qIdx]];
+      return { ...b, questions: qs };
+    }));
+  }
+
   // ── Inline question form ───────────────────────────────────────────────────
 
   function openNewQuestion(blockIdx: number) {
@@ -582,7 +601,6 @@ export default function TestForm({ testId }: Props) {
             </button>
             <input ref={importQRef} type="file" accept=".json,application/json" className="hidden"
               onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImportQuestions(f); e.target.value = ""; }} />
-            <button onClick={addBlock} className="text-sm text-amber-600 hover:underline">+ Add block</button>
           </div>
         </div>
 
@@ -594,13 +612,19 @@ export default function TestForm({ testId }: Props) {
 
         {blocks.map((block, bi) => (
           <div key={bi} className="card space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
               <input value={block.title}
                 onChange={(e) => setBlocks(blocks.map((b, i) => i === bi ? { ...b, title: e.target.value } : b))}
                 placeholder={`Block ${bi + 1} title (optional)`}
-                className="input flex-1 mr-3" />
+                className="input flex-1" />
               {blocks.length > 1 && (
-                <button onClick={() => removeBlock(bi)} className="text-xs text-red-400 hover:underline shrink-0">Remove block</button>
+                <div className="flex items-center gap-1 shrink-0">
+                  <button onClick={() => moveBlock(bi, -1)} disabled={bi === 0}
+                    className="text-gray-400 hover:text-gray-600 disabled:opacity-20 text-sm px-1" title="Move block up">↑</button>
+                  <button onClick={() => moveBlock(bi, 1)} disabled={bi === blocks.length - 1}
+                    className="text-gray-400 hover:text-gray-600 disabled:opacity-20 text-sm px-1" title="Move block down">↓</button>
+                  <button onClick={() => removeBlock(bi)} className="text-xs text-red-400 hover:underline ml-1">Remove</button>
+                </div>
               )}
             </div>
 
@@ -614,8 +638,8 @@ export default function TestForm({ testId }: Props) {
 
             {block.questions.length > 0 && (
               <ul className="space-y-1">
-                {block.questions.map((bq) => (
-                  <li key={bq.question_id} className="flex items-center justify-between text-sm bg-gray-50 rounded px-3 py-1.5 group">
+                {block.questions.map((bq, qi) => (
+                  <li key={bq.question_id} className="flex items-center gap-1 text-sm bg-gray-50 rounded px-3 py-1.5 group">
                     <button
                       onClick={() => openEditQuestion(bi, bq.data)}
                       className="flex-1 text-left truncate hover:text-amber-700"
@@ -623,8 +647,14 @@ export default function TestForm({ testId }: Props) {
                       <span className="text-xs text-amber-600 mr-2">{bq.data?.type}</span>
                       <span className="text-gray-700">{bq.data ? tiptapToText(bq.data.prompt_json).slice(0, 80) || "(no prompt)" : bq.question_id}</span>
                     </button>
-                    <button onClick={() => removeQuestionFromBlock(bi, bq.question_id)}
-                      className="text-red-400 text-xs ml-2 shrink-0 opacity-0 group-hover:opacity-100">✕</button>
+                    <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100">
+                      <button onClick={() => moveQuestion(bi, qi, -1)} disabled={qi === 0}
+                        className="text-gray-400 hover:text-gray-600 disabled:opacity-20 px-0.5" title="Move up">↑</button>
+                      <button onClick={() => moveQuestion(bi, qi, 1)} disabled={qi === block.questions.length - 1}
+                        className="text-gray-400 hover:text-gray-600 disabled:opacity-20 px-0.5" title="Move down">↓</button>
+                      <button onClick={() => removeQuestionFromBlock(bi, bq.question_id)}
+                        className="text-red-400 ml-1 px-0.5">✕</button>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -636,6 +666,8 @@ export default function TestForm({ testId }: Props) {
             </button>
           </div>
         ))}
+
+        <button onClick={addBlock} className="text-sm text-amber-600 hover:underline">+ Add block</button>
       </div>
 
       <div className="flex justify-end gap-3">
